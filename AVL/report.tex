@@ -1,0 +1,85 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8, graphicx}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{马竞轩, 3230103014}
+\chead{数据结构与算法第六次作业}
+\rhead{双十一, 2024}
+
+\section{balance()函数}
+\subsection{功能}
+考察以t为root的子树，如果它不平衡，则判断它是不平衡中的哪种情况，通过旋转操作让它平衡。
+
+注意！不管它是否平衡，都更新t的height，所以balance()是包含更新t的height这一操作的，下不赘述。
+\subsection{参数}
+指向一个子树root的指针，并且为引用，因此函数内部修改t时，直接修改实参。
+\subsection{返回值}
+无。
+\subsection{功能实现}
+考察它的左右孩子的height，若差值大于设定值ALLOWED\_IMBALANCE，再考察height大的那个孩子的左右孩子的height哪个大，据此分为四种情况，每种情况有对应的旋转方法，相对应做旋转就能使t为root的子树以及它的所有子树都平衡。
+
+\section{我的remove()是如何实现的}
+在remove()和detachMin()函数的最后一行加一行balance()，因为它们都存在删除操作，动态操作做完需要balance。
+
+把detachMin()改为递归形式（上次作业是循环形式），这样才能形成调用堆栈，也就是从remove()中调用detachMin(t->right)开始，向下向左搜索最小值，找到后每向上回溯一次就检查balance一次，因为对下面节点进行balance操作也是动态操作，会影响上面节点的height。
+
+remove()也是同理的，最下面remove完之后向上回溯检查balance。
+
+具体来说，这两个函数的内容都是：
+
+\{
+
+        ...
+
+        递归（即向下搜索）
+
+        ...
+
+        balance();
+
+\}
+
+也就是balance()在递归之后，所以是做完所有递归（搜索）再开始做balance()，也就是回溯的时候做balance()，要是balance在递归前，那就是反过来，搜索的时候做balance了，那就不对了。
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

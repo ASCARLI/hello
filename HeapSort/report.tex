@@ -1,0 +1,70 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8, graphicx}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{马竞轩, 3230103014}
+\chead{数据结构与算法第七次作业}
+\rhead{Dec. 2nd, 2024}
+
+\section{设计思路}
+核心并不复杂，只有HeapSort一个函数。先创建空堆，此时数据已经存储在HeapSort中的vc（也就是test.cpp中的v），从第一个元素开始一个一个插入堆，而“插入”在代码中具体体现为“将push\_heap的两个参数中的后一个+1”，相当于文献中的vc.push\_back()，再进行push\_heap。所有数据遍历后，堆就创建完成了，默认为大根堆。
+
+每次将最大值（也就是root）进行pop\_heap，这一函数具体做了“将root与堆的最后一个调换位置，此时的最后一个元素不算作属于堆的了，然后调整剩余元素使之仍为堆”，每次将pop\_heap的后一个参数-1，代表这个是已经排序好的，不再算作属于堆的了。由此从后往前排序。
+\section{测试流程}
+共4组，分别为随机序列、有序序列、逆序序列、部分元素重复序列，其中部分元素重复序列为生成0, 1, ..., int(size / 100) - 1如此循环的序列。每组先按要求生成数据存到vector v中，然后分别进行HeapSort、检查排序正确性、使用STL的HeapSort、清除数据。
+
+\section{测试结果}
+每次测试结果有误差（±30\%以内），这里取其中一组测试结果。
+
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{} & \textbf{my heapsort time(ms)} & \textbf{std::sort\_heap time(ms)} \\ \hline
+random sequence & 172 & 80 \\ \hline
+ordered sequence & 92 & 88 \\ \hline
+reverse sequence & 78 & 89 \\ \hline
+repetitive sequence & 126 & 65 \\ \hline
+\end{tabular}
+    
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
